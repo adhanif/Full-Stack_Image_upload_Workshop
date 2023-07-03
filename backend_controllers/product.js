@@ -3,11 +3,13 @@ const Product = require("../models/products");
 const newProduct = async (req, res) => {
   try {
     const { name, price, owner } = req.body;
-    if (req.file) {
-      image = req.file.filename;
-    } else if (req.body.image && req.body.image.startsWith("http")) {
-      image = req.body.image;
-    }
+    const image = req.file.filename;
+    console.log(image);
+    // if (req.file) {
+    //   image = req.file.filename;
+    // } else if (req.body.image && req.body.image.startsWith("http")) {
+    //   image = req.body.image;
+    // }
     const product = await Product.create({
       name: name,
       price: price,
