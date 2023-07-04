@@ -2,9 +2,14 @@ const express = require("express");
 const productRouter = express.Router();
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
-const { allProducts, newProduct } = require("../backend_controllers/product");
+const {
+  allProducts,
+  newProduct,
+  deleteProduct,
+} = require("../backend_controllers/product");
 
-productRouter.get("/products", allProducts);
-productRouter.post("/products", upload.single("image"), newProduct);
+productRouter.get("/", allProducts);
+productRouter.post("/", upload.single("image"), newProduct);
+productRouter.delete("/:id", deleteProduct);
 
 module.exports = productRouter;
