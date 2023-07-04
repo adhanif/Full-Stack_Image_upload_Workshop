@@ -48,7 +48,7 @@ export default function Products() {
                     handleClick(e, product._id, product.image.publicId)
                   }
                 >
-                  Delete Post
+                  Delete Product
                 </button>
               </div>
             );
