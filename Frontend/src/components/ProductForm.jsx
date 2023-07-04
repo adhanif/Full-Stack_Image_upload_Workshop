@@ -27,7 +27,9 @@ export default function ProductForm() {
     formData.append("name", data.name);
     formData.append("price", data.price);
     formData.append("image", data.image[0]);
-    console.log(data.image[0].name);
+    formData.append("owner", data.owner);
+
+    // console.log(data.image[0]);
     axios
       .post(url, formData)
       .then(() => {
@@ -45,7 +47,7 @@ export default function ProductForm() {
       <div>
         <ToastContainer
           position="top-right"
-          autoClose={2000}
+          autoClose={500}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -82,7 +84,14 @@ export default function ProductForm() {
           id="image"
         />
         <p style={{ color: "red" }}>{errors.image?.message}</p>
-
+        <input
+          {...register("owner", {
+            required: "this is required",
+            maxLength: { value: 200, message: "Maximum length is 200" },
+          })}
+          placeholder="Owner_Id"
+        />
+        <p style={{ color: "red" }}>{errors.owner?.message}</p>
         <input type="submit" />
       </form>
     </>

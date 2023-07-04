@@ -1,25 +1,35 @@
 const Product = require("../models/products");
-
+const cloudinary = require("../cloudinary");
+const fs = require("fs");
 const newProduct = async (req, res) => {
   try {
     const { name, price, owner } = req.body;
-    const image = req.file.filename;
-    console.log(image);
-    // if (req.file) {
-    //   image = req.file.filename;
-    // } else if (req.body.image && req.body.image.startsWith("http")) {
-    //   image = req.body.image;
-    // }
+
+    const result = await cloudinary.uploader.unsigned_upload(
+      req.file.path,
+      "cudcirar"
+    );
+
+    if (!result || !result.secure_url) {
+      throw new Error("Image upload failed");
+    }
+
     const product = await Product.create({
       name: name,
       price: price,
-      image: image,
+      image: result.secure_url,
       owner: owner,
     });
+    try {
+      fs.unlinkSync(req.file.path);
+      //file removed
+    } catch (err) {
+      console.error(err);
+    }
     res.status(201).json(product);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Error creating user");
+    res.status(500).send("Error creating Product");
   }
 };
 
