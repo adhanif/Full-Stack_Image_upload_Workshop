@@ -29,7 +29,7 @@ export default function ProductForm() {
     formData.append("image", data.image[0]);
     formData.append("owner", data.owner);
 
-    // console.log(data.image[0]);
+    // console.log(formData);
     axios
       .post(url, formData)
       .then(() => {

@@ -1,10 +1,11 @@
 const Product = require("../models/products");
 const cloudinary = require("../cloudinary");
 const fs = require("fs");
+
 const newProduct = async (req, res) => {
   try {
     const { name, price, owner } = req.body;
-
+    // console.log(req.body);
     const result = await cloudinary.uploader.unsigned_upload(
       req.file.path,
       "cudcirar"
@@ -17,7 +18,10 @@ const newProduct = async (req, res) => {
     const product = await Product.create({
       name: name,
       price: price,
-      image: result.secure_url,
+      image: {
+        url: result.secure_url,
+        publicId: result.public_id,
+      },
       owner: owner,
     });
     try {
@@ -44,4 +48,21 @@ const allProducts = async (req, res) => {
   }
 };
 
-module.exports = { newProduct, allProducts };
+//delete a product based on its ID
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+
+    const { publicId } = product.image;
+    await cloudinary.uploader.destroy(publicId);
+    const deletedProduct = await Product.findByIdAndDelete(id);
+    res.status(201).json(deletedProduct);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Error creating user");
+  }
+};
+
+module.exports = { newProduct, allProducts, deleteProduct };
